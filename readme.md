@@ -7,5 +7,5 @@ I built it with tcc but you can do it with any compiler with -lncurses flag
 ## TODO
 * [x] more controls(hjkl and 7913)
 * [x] make it possible to cancel selection
-* [ ] make game layout size selectable by argument in terminal
 * [ ] make seed changable by argument too(now you can change it by defined constant value)
+* [ ] make game layout size selectable by argument in terminal(also can be changed)
