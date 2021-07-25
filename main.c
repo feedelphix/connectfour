@@ -4,7 +4,7 @@
 #define SIZE 16
 #define seed 1
 
-char items[SIZE - 4][SIZE];
+char items[SIZE][SIZE];
 char itemsToAdd[] = {'a', 'b', 'c'};
 char selectedItems[4][2];
 int cursory, cursorx, selectedItemsCount, score = 0;
@@ -14,75 +14,56 @@ int selectedCheck() {
 	int connectedCount = 1; // as we compare only 4 but not more for now, it compare 3 xs and ys variables of current item with next and adds 1 on success. we get true on 4 if all goes well starting with 1 and not 0
 	char charToCheck = items[selectedItems[0][0]][selectedItems[0][1]];
 	char nextCharToCheck;
-	bool connected = false;
 	for (int itemToCheck = 0; itemToCheck < 3; itemToCheck++) {
 		y = selectedItems[itemToCheck][0];
 		x = selectedItems[itemToCheck][1];
 		nextY = selectedItems[itemToCheck + 1][0];
 		nextX = selectedItems[itemToCheck + 1][1];
 		nextCharToCheck = items[selectedItems[itemToCheck + 1][0]][selectedItems[itemToCheck + 1][1]];
-		if (((y - 1 == nextY || y + 1 == nextY && x == nextX) || (x - 1 == nextX || x + 1 == nextX && y == nextY)) && charToCheck == nextCharToCheck) {
+		if ((y + 1 == nextY || y - 1 == nextY || y == nextY && x + 1 == nextX || x - 1 == nextX || x == nextX) && charToCheck == nextCharToCheck) {
 			connectedCount++;
 		}
 	}
-	if (connectedCount >= 4) {
-		connected = true;
-	}
-	return connected;
-}
-
-void regen() {
-	for (int y = 0; y < SIZE - 4; y++) {
-		for (int x = 0; x < SIZE; x++) {
-			if (items[y][x] == ' ') {
-				items[y][x] = itemsToAdd[rand() % sizeof(itemsToAdd)];
-			}
-		}
-	}
+	if (connectedCount >= 4) return true;
+	return false;
 }
 
 void clearSelected(bool destroy) {
 	for (int currentItem = 0; currentItem < 4; currentItem++) {
 		if (destroy) {
-			items[selectedItems[currentItem][0]][selectedItems[currentItem][1]] = ' ';
+			items[selectedItems[currentItem][0]][selectedItems[currentItem][1]] = itemsToAdd[rand() % sizeof(itemsToAdd)];
 			score++;
 		}
 		selectedItems[currentItem][0] = -1;
 		selectedItems[currentItem][1] = -1;
 	}
+	selectedItemsCount = 0;
 }
 
 void output() {
 	clear();
-	for (int y = 0; y < SIZE - 4; y++) {
+	for (int y = 0; y < SIZE; y++) {
 		for (int x = 0; x < SIZE; x++) {
 			for (int itemToCheck = 0; itemToCheck < 4; itemToCheck++) {
-				if (y == selectedItems[itemToCheck][0] && x == selectedItems[itemToCheck][1]) {
-					attron(COLOR_PAIR(3));
-				}
+				if (y == selectedItems[itemToCheck][0] && x == selectedItems[itemToCheck][1]) attron(COLOR_PAIR(3));
 			}
-			if (y == cursory && x == cursorx) {
-				attron(COLOR_PAIR(2));
-			}
+			if (y == cursory && x == cursorx) attron(COLOR_PAIR(2));
 			addch(items[y][x]);
 			attron(COLOR_PAIR(1));
 		}
 		addch('\n');
 	}
-	addch('\n');
-	printw("%2d %2d\n", cursory, cursorx);
 	printw("Score: %d\n", score);
-	printw("%s. selected: %d", selectedCheck() ? "4 connected! press 5 again to remove them" : "not 4 items connected", selectedItemsCount);
 	refresh();
 }
 
 void init() {
-	for (int y = 0; y < SIZE - 4; y++) {
+	for (int y = 0; y < SIZE; y++) {
 		for (int x = 0; x < SIZE; x++) {
 			items[y][x] = itemsToAdd[rand() % sizeof(itemsToAdd)];
 		}
 	}
-	clearSelected(false); // makes selected item to not appear on output
+	clearSelected(false); // makes selected items to not appear on output
 }
 
 int main() {
@@ -93,12 +74,12 @@ int main() {
 	init_pair(3, COLOR_WHITE, COLOR_RED); // selected items color
 	srand(seed);
 	init();
-	bool game = true;
-	while(game) {
+	bool quit;
+	while(!quit) {
 		output();
 		switch(getch()) {
 			case 'q':
-				game = false;
+				quit = true;
 				break;
 			case 'k':
 			case '8':
@@ -114,7 +95,7 @@ int main() {
 				break;
 			case '2':
 			case 'j':
-				if (cursory + 1 != SIZE - 4) cursory++;
+				if (cursory + 1 != SIZE) cursory++;
 				break;
 			case '7':
 				if (cursory - 1 != -1 && cursorx - 1 != -1) {
@@ -129,13 +110,13 @@ int main() {
 				}
 				break;
 			case '1':
-				if (cursory + 1 != SIZE - 4 && cursorx - 1 != -1) {
+				if (cursory + 1 != SIZE && cursorx - 1 != -1) {
 					cursory++;
 					cursorx--;
 				}
 				break;
 			case '3':
-				if (cursory + 1 != SIZE - 4 && cursorx + 1 != SIZE) {
+				if (cursory + 1 != SIZE && cursorx + 1 != SIZE) {
 					cursory++;
 					cursorx++;
 				}
@@ -152,18 +133,13 @@ int main() {
 						selectedItems[selectedItemsCount][1] = cursorx;
 						selectedItemsCount++;
 					} else {
-						selectedItemsCount = 0;
 						clearSelected(selectedCheck());
-						regen();
 					}
 				}
 				break;
 			case 'c':
-				selectedItemsCount = 0;
-				clearSelected(selectedCheck());
+				clearSelected(false);
 				break;
-			default:
-				continue;
 		}
 	}
 	endwin();
