@@ -148,6 +148,11 @@ int main() {
 						regen();
 					}
 				}
+				break;
+			case 'c':
+				selectedItemsCount = 0;
+				clearSelected(selectedCheck());
+				break;
 			default:
 				continue;
 		}
