@@ -141,6 +141,7 @@ int main() {
 				}
 				break;
 			case '5':
+			case '\n':
 				if (cursory == selectedItems[selectedItemsCount - 1][0] && cursorx == selectedItems[selectedItemsCount - 1][1]) {
 					selectedItemsCount--;
 					selectedItems[selectedItemsCount][0] = -1;
