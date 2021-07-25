@@ -102,35 +102,43 @@ int main() {
 				break;
 			case 'k':
 			case '8':
-				cursory--;
+				if (cursory - 1 != -1) cursory--;
 				break;
 			case 'h':
 			case '4':
-				cursorx--;
+				if (cursorx - 1 != -1) cursorx--;
 				break;
 			case '6':
 			case 'l':
-				cursorx++;
+				if (cursorx + 1 != SIZE) cursorx++;
 				break;
 			case '2':
 			case 'j':
-				cursory++;
+				if (cursory + 1 != SIZE - 4) cursory++;
 				break;
 			case '7':
-				cursory--;
-				cursorx--;
+				if (cursory - 1 != -1 && cursorx - 1 != -1) {
+					cursory--;
+					cursorx--;
+				}
 				break;
 			case '9':
-				cursory--;
-				cursorx++;
+				if (cursory - 1 != -1 && cursorx + 1 != SIZE) {
+					cursory--;
+					cursorx++;
+				}
 				break;
 			case '1':
-				cursory++;
-				cursorx--;
+				if (cursory + 1 != SIZE - 4 && cursorx - 1 != -1) {
+					cursory++;
+					cursorx--;
+				}
 				break;
 			case '3':
-				cursory++;
-				cursorx++;
+				if (cursory + 1 != SIZE - 4 && cursorx + 1 != SIZE) {
+					cursory++;
+					cursorx++;
+				}
 				break;
 			case '5':
 				if (cursory == selectedItems[selectedItemsCount - 1][0] && cursorx == selectedItems[selectedItemsCount - 1][1]) {
