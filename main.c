@@ -100,17 +100,37 @@ int main() {
 			case 'q':
 				game = false;
 				break;
+			case 'k':
 			case '8':
 				cursory--;
 				break;
+			case 'h':
 			case '4':
 				cursorx--;
 				break;
 			case '6':
+			case 'l':
 				cursorx++;
 				break;
 			case '2':
+			case 'j':
 				cursory++;
+				break;
+			case '7':
+				cursory--;
+				cursorx--;
+				break;
+			case '9':
+				cursory--;
+				cursorx++;
+				break;
+			case '1':
+				cursory++;
+				cursorx--;
+				break;
+			case '3':
+				cursory++;
+				cursorx++;
 				break;
 			case '5':
 				if (cursory == selectedItems[selectedItemsCount - 1][0] && cursorx == selectedItems[selectedItemsCount - 1][1]) {
